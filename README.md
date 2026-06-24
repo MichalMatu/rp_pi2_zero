@@ -82,6 +82,68 @@ ip -4 addr show usb0
 ip -4 addr show wlan0
 ```
 
+## Optymalizacja headless
+
+Pi dziala jako headless appliance. Po pierwszej konfiguracji zostaly wylaczone
+uslugi, ktore nie sa potrzebne do SSH, Wi-Fi, USB gadget, mDNS i e-paper:
+
+- `cloud-init*`;
+- `NetworkManager-wait-online.service`;
+- `cups*`;
+- `ModemManager.service`;
+- `bluetooth.service`;
+- `nfs-blkmap.service`, `rpcbind*`;
+- `lightdm.service`, `wayvnc-control.service`;
+- `accounts-daemon.service`, `udisks2.service`, `polkit.service`;
+- `glamor-test.service`, `rp1-test.service`;
+- `apt-daily.timer`, `apt-daily-upgrade.timer`;
+- autologin starego usera `meehow` na `tty1`;
+- globalne user services `rpi-connect.service` i `rpi-connect-wayvnc.service`.
+
+Zostawione celowo:
+
+- `NetworkManager.service` i `wpa_supplicant.service` dla stabilnego Wi-Fi;
+- `avahi-daemon.service`, zeby dzialalo `zero2.local`;
+- `ssh.service`;
+- `usb0-static.service`;
+- zram swap zarzadzany przez Raspberry Pi OS.
+
+Ustawienia systemowe:
+
+```text
+/etc/cloud/cloud-init.disabled
+/etc/systemd/journald.conf.d/10-rp-pi2-zero.conf
+/etc/sysctl.d/10-rp-pi2-zero.conf
+/etc/ssh/sshd_config.d/10-rp-pi2-zero-hardening.conf
+```
+
+SSH jest utwardzone pod klucze:
+
+```text
+PasswordAuthentication no
+PermitRootLogin no
+AllowUsers michal
+MaxAuthTries 3
+X11Forwarding no
+```
+
+Przed wylaczeniem hasel sprawdzono, ze logowanie kluczem dziala:
+
+```bash
+ssh -o BatchMode=yes -o PreferredAuthentications=publickey \
+  -o PasswordAuthentication=no michal@zero2.local
+```
+
+Po optymalizacji ostatni pomiar bootu:
+
+```text
+Startup finished in 4.330s (kernel) + 13.137s (userspace) = 17.468s
+multi-user.target reached after 13.136s in userspace.
+```
+
+Przed optymalizacja bylo okolo `30.5 s` lacznie i `24.0 s` do
+`multi-user.target`.
+
 ## E-paper
 
 SPI i I2C są włączone w `/boot/firmware/config.txt`. Po zalogowaniu można sprawdzić:

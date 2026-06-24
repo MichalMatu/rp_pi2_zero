@@ -1,7 +1,6 @@
 [Unit]
 Description=Show Raspberry Pi connection info on WeAct 2.9 e-paper
-After=network-online.target
-Wants=network-online.target
+After=network.target ssh.service
 
 [Service]
 Type=oneshot
