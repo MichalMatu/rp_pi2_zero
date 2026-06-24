@@ -1,0 +1,19 @@
+title = "rp_pi2_zero gitleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "raspberry-pi-wifi-psk"
+description = "Raspberry Pi Wi-Fi PSK in config files"
+regex = '''(?im)^[ \t]*(?:psk|password)[ \t]*=[ \t]*["']?([^"'\r\n#]{8,})["']?[ \t]*(?:#.*)?$'''
+secretGroup = 1
+keywords = ["psk", "password"]
+
+[allowlist]
+description = "Allow placeholders and documentation-only commands"
+regexes = [
+  '''PI_PASSWORD=$''',
+  '''WIFI_PASSWORD=$''',
+  '''ssh michal@''',
+]

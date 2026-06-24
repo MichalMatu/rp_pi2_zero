@@ -1,0 +1,9 @@
+[Unit]
+Description=Show Raspberry Pi connection info on WeAct 2.9 e-paper
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=michal
+ExecStart=/home/michal/bin/epd_290_bw_status --auto status

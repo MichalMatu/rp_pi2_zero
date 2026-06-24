@@ -1,0 +1,35 @@
+# OS/editor noise
+.DS_Store
+._*
+Thumbs.db
+
+# Local secrets
+.secrets/
+.env
+.env.*
+*.local
+*.secret
+*.secrets
+*.key
+*.pem
+id_*
+!*.example
+!.env.example
+
+# Raspberry Pi boot files that can contain local credentials
+wpa_supplicant.conf
+userconf.txt
+firstrun.log
+
+# Python/cache/log noise
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.ruff_cache/
+
+# Node/cache noise
+node_modules/
+dist/
+build/
+.vite/
